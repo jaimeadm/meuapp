@@ -19,9 +19,9 @@
 				<ul class="dropdown-menu">
 					<li class="dropdown-header">Menu</li>
 					<li><a href="index.php">Home</a></li>
-					<li class="disabled"><a href="#">Home</a></li>
+					<li><a href="info.php">PHP Info</a></li>
 					<li class="divider"></li>
-					<li><a href="#">Fechar</a></li>
+					<li class="disabled"><a href="#">Fechar</a></li>
 				</ul>
 		</div>
 		</p>
