@@ -2,8 +2,11 @@ version: '3'
 services:
 
 # Web tier
+# docker run -itd --name meuapp_cont -p 8080:80 jaimeadm/meuapp:1.0
   meuapp:
-    build: .
+    build:
+      dockerfile: Dockerfile
+      context: .
     depends_on:
        - meudb
        - meucache
@@ -16,11 +19,9 @@ services:
       - net-meuapp
     volumes:
       - ./src:/var/www/html
-    links:
-      - meudb
-      - meucache
 
 # Database tier
+# docker run --name meudb -e MYSQL_ROOT_PASSWORD=senha123 -d mysql:8.0.1
   meudb:
     image: mysql:latest
     restart: always
@@ -29,7 +30,7 @@ services:
       MYSQL_DATABASE: 'meubanco'
       MYSQL_USER: 'meuuser'
       MYSQL_PASSWORD: 'meupass10'
-      MYSQL_ROOT_PASSWORD: 'P@ssw0rd'
+      MYSQL_ROOT_PASSWORD: 'senha123'
     ports:
       - '3306:3306'
     networks:
@@ -37,6 +38,19 @@ services:
     volumes:
       - vol-db:/var/lib/mysql
       - ./src/meuapp.sql:/docker-entrypoint-initdb.d/meuapp.sql
+
+# Database Admin tier
+# docker run --name meudbadmin -d --link meudb:db -p 8081:80 phpmyadmin/phpmyadmin
+  meudbadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    #container_name: meudbadmin
+    ports:
+      - '8081:80'
+    networks:
+      - net-meuapp
+    environment:
+      - PMA_ARBITRARY=1
 
 # Cache tier
   meucache:
